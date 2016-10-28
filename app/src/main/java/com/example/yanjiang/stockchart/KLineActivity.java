@@ -8,12 +8,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.TextView;
+import android.view.Gravity;
 
 import com.example.yanjiang.stockchart.api.ConstantTest;
 import com.example.yanjiang.stockchart.bean.DataParse;
 import com.example.yanjiang.stockchart.bean.KLineBean;
 import com.example.yanjiang.stockchart.mychart.CoupleChartGestureListener;
+import com.example.yanjiang.stockchart.popupwindows.ShowInfoPopupWindow;
 import com.example.yanjiang.stockchart.rxutils.MyUtils;
 import com.example.yanjiang.stockchart.rxutils.VolFormatter;
 import com.github.mikephil.charting.charts.BarChart;
@@ -42,7 +43,6 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,22 +55,6 @@ public class KLineActivity extends BaseActivity {
     CombinedChart combinedchart;
     @Bind(R.id.barchart)
     BarChart barChart;
-    @Bind(R.id.txtda)
-    TextView txtda;
-    @Bind(R.id.txtzhangfu)
-    TextView txtzhangfu;
-
-    @Bind(R.id.txthigh)
-    TextView txthigh;
-
-    @Bind(R.id.txtlow)
-    TextView txtlow;
-
-    @Bind(R.id.txtkai)
-    TextView txtkai;
-
-    @Bind(R.id.txtshou)
-    TextView txtshou;
 
 
     private DataParse mData;
@@ -81,6 +65,8 @@ public class KLineActivity extends BaseActivity {
     BarDataSet barDataSet;
     private BarLineChartTouchListener mChartTouchListener;
     private CoupleChartGestureListener coupleChartGestureListener;
+
+    ShowInfoPopupWindow showInfoPopupWindow = null;
     float sum = 0;
     private Handler handler = new Handler() {
         @Override
@@ -129,10 +115,12 @@ public class KLineActivity extends BaseActivity {
     private void initChart() {
         barChart.setDrawBorders(true);
         barChart.setBorderWidth(1);
+
         barChart.setBorderColor(getResources().getColor(R.color.minute_grayLine));
         barChart.setDescription("");
         barChart.setDragEnabled(true);
-        barChart.setScaleYEnabled(false);
+        barChart.setScaleYEnabled(true);
+        barChart.setScaleXEnabled(true);
 
         Legend barChartLegend = barChart.getLegend();
         barChartLegend.setEnabled(false);
@@ -162,7 +150,7 @@ public class KLineActivity extends BaseActivity {
         /****************************************************************/
         combinedchart.setDrawBorders(true);
         combinedchart.setBorderWidth(1);
-        combinedchart.setBorderColor(getResources().getColor(R.color.minute_grayLine));
+        //combinedchart.setBorderColor(getResources().getColor(R.color.minute_grayLine));
         combinedchart.setDescription("");
         combinedchart.setDragEnabled(true);
         combinedchart.setScaleYEnabled(false);
@@ -211,6 +199,11 @@ public class KLineActivity extends BaseActivity {
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                 Log.e("%%%%", h.getXIndex() + "");
                 combinedchart.highlightValues(new Highlight[]{h});
+                if (showInfoPopupWindow != null)
+                    showInfoPopupWindow.dismiss();
+                else
+                    showInfoPopupWindow = new ShowInfoPopupWindow(KLineActivity.this);
+                showInfoPopupWindow.showAtLocation(KLineActivity.this.findViewById(R.id.main), Gravity.LEFT | Gravity.CENTER_HORIZONTAL, 0, 0);
             }
 
             @Override
@@ -218,12 +211,19 @@ public class KLineActivity extends BaseActivity {
                 combinedchart.highlightValue(null);
             }
         });
+
+
         combinedchart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
 
                 barChart.highlightValues(new Highlight[]{h});
 
+                if (showInfoPopupWindow != null)
+                    showInfoPopupWindow.dismiss();
+                else
+                    showInfoPopupWindow = new ShowInfoPopupWindow(KLineActivity.this);
+                showInfoPopupWindow.showAtLocation(KLineActivity.this.findViewById(R.id.main), Gravity.LEFT | Gravity.CENTER_HORIZONTAL, 0, 0);
              /*   CandleEntry candleEntry = (CandleEntry) e;
                 float change = (candleEntry.getClose() - candleEntry.getOpen()) / candleEntry.getOpen();
                 NumberFormat nf = NumberFormat.getPercentInstance();
@@ -246,7 +246,6 @@ public class KLineActivity extends BaseActivity {
                 barChart.highlightValue(null);
             }
         });
-
 
     }
 
@@ -311,11 +310,13 @@ public class KLineActivity extends BaseActivity {
         barDataSet.setHighLightColor(Color.WHITE);
 
         barDataSet.setDrawValues(false);
-        // barDataSet.setColor(Color.RED);
+
         List<Integer> colorsList = new ArrayList<Integer>();
         colorsList.add(Color.RED);
-        colorsList.add(Color.GREEN);
+        colorsList.add(Color.CYAN);
         barDataSet.setColors(colorsList);
+       /* barDataSet.setBarBorderColor(Color.RED);
+        barDataSet.setBarBorderWidth(1);*/
 
         BarData barData = new BarData(xVals, barDataSet);
         barChart.setData(barData);
@@ -329,14 +330,16 @@ public class KLineActivity extends BaseActivity {
         CandleDataSet candleDataSet = new CandleDataSet(candleEntries, "KLine");
         candleDataSet.setDrawHorizontalHighlightIndicator(false);
 
-        candleDataSet.setIncreasingColor(Color.GREEN);
+        candleDataSet.setIncreasingColor(Color.RED);
         candleDataSet.setIncreasingPaintStyle(Paint.Style.STROKE);
+        candleDataSet.setNeutralColor(Color.RED);
+        candleDataSet.setDrawHighlightIndicators(true);
 
         candleDataSet.setHighlightEnabled(true);
         candleDataSet.setHighLightColor(Color.WHITE);
         candleDataSet.setValueTextSize(10f);
         candleDataSet.setDrawValues(false);
-        candleDataSet.setColor(Color.RED);
+        candleDataSet.setColor(getResources().getColor(R.color.bar_bg));
         candleDataSet.setShadowWidth(1f);
         candleDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         CandleData candleData = new CandleData(xVals, candleDataSet);
@@ -385,11 +388,11 @@ public class KLineActivity extends BaseActivity {
         }
         lineDataSetMa.setDrawValues(false);
         if (ma == 5) {
-            lineDataSetMa.setColor(Color.BLUE);
+            lineDataSetMa.setColor(Color.WHITE);
         } else if (ma == 10) {
-            lineDataSetMa.setColor(Color.GRAY);
-        } else {
             lineDataSetMa.setColor(Color.YELLOW);
+        } else {
+            lineDataSetMa.setColor(Color.RED);
         }
         lineDataSetMa.setLineWidth(1f);
         lineDataSetMa.setDrawCircles(false);

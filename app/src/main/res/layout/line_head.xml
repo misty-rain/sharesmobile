@@ -1,117 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
+              android:layout_height="wrap_content"
               android:background="@android:color/black"
-              android:layout_height="wrap_content">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <TextView
-        android:text="3041.27"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textColor="@android:color/holo_green_dark"
-        android:layout_margin="20dp"
-        android:id="@+id/txtda"/>
-
-    <TextView
-        android:text="高"
-        android:textSize="@dimen/activity_horizontal_margin"
-        android:textColor="@android:color/holo_orange_dark"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="25dp"
-
-        android:layout_height="wrap_content"
-        />
-
-    <TextView
-        android:text="3058.11"
-        android:textSize="@dimen/activity_horizontal_margin"
-        android:textColor="@android:color/holo_red_dark"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="5dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/txthigh"/>
-
-    <TextView
-        android:text="开"
-        android:textSize="@dimen/activity_horizontal_margin"
-        android:textColor="@android:color/holo_orange_dark"
-        android:layout_width="wrap_content"
-        android:layout_marginTop="20dp"
-
-        android:layout_marginLeft="25dp"
-        android:layout_height="wrap_content"
-        />
-    <TextView
-        android:text="3066.21"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="5dp"
-        android:textSize="@dimen/activity_horizontal_margin"
-        android:textColor="@android:color/holo_red_dark"
-        android:id="@+id/txtkai"/>
-
-</LinearLayout>
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:text="3041.27"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/activity_horizontal_margin"
-            android:textColor="@android:color/holo_green_dark"
-            android:layout_margin="20dp"
-            android:id="@+id/txtzhangfu"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
 
         <TextView
-            android:text="低"
-            android:textSize="@dimen/activity_horizontal_margin"
-            android:textColor="@android:color/holo_orange_dark"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="30dp"
-
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="沪铝1612"
+            android:textColor="@color/bg_white"
+            android:textSize="20sp"
             />
-
-        <TextView
-            android:text="3058.11"
-            android:textSize="@dimen/activity_horizontal_margin"
-            android:textColor="@android:color/holo_red_dark"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="5dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtlow"/>
-
-        <TextView
-            android:text="额"
-            android:textSize="@dimen/activity_horizontal_margin"
-            android:textColor="@android:color/holo_orange_dark"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="20dp"
-
-            android:layout_marginLeft="25dp"
-            android:layout_height="wrap_content"
-            />
-        <TextView
-            android:text="3066.21"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="5dp"
-            android:textSize="@dimen/activity_horizontal_margin"
-            android:textColor="@android:color/holo_red_dark"
-            android:id="@+id/txtshou"/>
-
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtda"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:text="3041.27"
+                android:textColor="@color/kline_title_font_red"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+
+            <TextView
+                android:id="@+id/txthigh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:text="+530[+4.05%]"
+                android:textColor="@color/kline_title_font_red"
+                android:textSize="@dimen/activity_vertical_margin"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txtzhangfu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="卖价"
+                    android:textColor="@color/bg_white"
+                    android:textSize="@dimen/activity_horizontal_margin"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="13630"
+                    android:textColor="@color/kline_title_font_red"
+
+                    android:textSize="@dimen/activity_horizontal_margin"
+                    />
+
+                <TextView
+                    android:id="@+id/txtlow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="37"
+                    android:textColor="@color/bg_white"
+                    android:textSize="@dimen/activity_horizontal_margin"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="买价"
+                    android:textColor="@color/bg_white"
+                    android:textSize="@dimen/activity_horizontal_margin"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="13150"
+                    android:textColor="@color/kline_title_font_red"
+
+                    android:textSize="@dimen/activity_horizontal_margin"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="12"
+                    android:textColor="@color/bg_white"
+                    android:textSize="@dimen/activity_horizontal_margin"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="持仓"
+                    android:textColor="@color/bg_white"
+                    android:textSize="@dimen/activity_horizontal_margin"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="20190"
+                    android:textColor="@color/kline_title_font_red"
+
+                    android:textSize="@dimen/activity_horizontal_margin"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="20dp"
+                    android:text="-16600"
+                    android:textColor="@color/bg_white"
+                    android:textSize="@dimen/activity_horizontal_margin"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

@@ -5,10 +5,16 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="minute_grayLine">#2D3945</color>
-    <color name="minute_blue">#00D0FC</color>
+
     <color name="minute_yellow">#E7B448</color>
     <color name="minute_black">#101419</color>
     <color name="minute_jizhun">#7F9976</color>
     <color name="minute_zhoutv">#858D93</color>
     <color name="marker_bg">#1C232E</color>
+    <color name="bar_bg">#02FFFF</color>
+    <color name="wall_bg">#020202</color>
+    <color name="bg_white">#FFFFF9</color>
+    <color name="kline_title_font_red">#FC3D2D</color>
+
+
 </resources>

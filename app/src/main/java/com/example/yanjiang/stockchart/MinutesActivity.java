@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
+import android.widget.TextView;
 
 import com.example.yanjiang.stockchart.api.ConstantTest;
 import com.example.yanjiang.stockchart.bean.DataParse;
@@ -15,9 +17,10 @@ import com.example.yanjiang.stockchart.mychart.MyLineChart;
 import com.example.yanjiang.stockchart.mychart.MyRightMarkerView;
 import com.example.yanjiang.stockchart.mychart.MyXAxis;
 import com.example.yanjiang.stockchart.mychart.MyYAxis;
-import com.example.yanjiang.stockchart.rxutils.VolFormatter;
+import com.example.yanjiang.stockchart.popupwindows.ShowInfoPopupWindow;
 import com.example.yanjiang.stockchart.rxutils.MyUtils;
 import com.example.yanjiang.stockchart.rxutils.SchedulersCompat;
+import com.example.yanjiang.stockchart.rxutils.VolFormatter;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
@@ -67,6 +70,7 @@ public class MinutesActivity extends BaseActivity {
     private DataParse mData;
     Integer sum = 0;
     List<Integer> listA, listB;
+    public static ShowInfoPopupWindow showInfoPopupWindow = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +88,31 @@ public class MinutesActivity extends BaseActivity {
         lineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
                 barChart.highlightValues(new Highlight[]{h});
                 lineChart.setHighlightValue(h);
+
+                if (showInfoPopupWindow != null) {
+                    //showInfoPopupWindow.dismiss();
+                    if (showInfoPopupWindow.isShowing()) {
+                        // CandleEntry candleEntry = (CandleEntry) e;
+                        TextView txtKai = (TextView) showInfoPopupWindow.getContentView().findViewById(R.id.txtkai);
+                        TextView txtChengjiao = (TextView) showInfoPopupWindow.getContentView().findViewById(R.id.txtchegnjiao);
+                        TextView txtEnd = (TextView) showInfoPopupWindow.getContentView().findViewById(R.id.txtend);
+                        TextView txtlow = (TextView) showInfoPopupWindow.getContentView().findViewById(R.id.txtlow);
+
+                        txtKai.setText(String.valueOf(h.getXIndex()));
+                        txtChengjiao.setText(String.valueOf(h.getValue()));
+                        txtEnd.setText(String.valueOf(h.getXIndex()));
+                        txtlow.setText(String.valueOf(h.getValue()));
+                    } else {
+                        showInfoPopupWindow.showAtLocation(MinutesActivity.this.findViewById(R.id.main), Gravity.LEFT | Gravity.CENTER_HORIZONTAL, 0, 0);
+                    }
+                } else {
+                    showInfoPopupWindow = new ShowInfoPopupWindow(MinutesActivity.this);
+                    showInfoPopupWindow.showAtLocation(MinutesActivity.this.findViewById(R.id.main), Gravity.LEFT | Gravity.CENTER_HORIZONTAL, 0, 0);
+                }
+
             }
 
             @Override
@@ -169,7 +196,6 @@ public class MinutesActivity extends BaseActivity {
         axisLeftLine.setDrawGridLines(false);
         /*轴不显示 避免和border冲突*/
         axisLeftLine.setDrawAxisLine(false);
-
 
 
         //右边y
@@ -289,7 +315,7 @@ public class MinutesActivity extends BaseActivity {
                 continue;
             }
             if (!TextUtils.isEmpty(stringSparseArray.get(i)) &&
-                    stringSparseArray.get(i).contains("/")) {
+                      stringSparseArray.get(i).contains("/")) {
                 i++;
             }
             lineCJEntries.add(new Entry(mData.getDatas().get(i).cjprice, i));
@@ -304,12 +330,12 @@ public class MinutesActivity extends BaseActivity {
         barDataSet = new BarDataSet(barEntries, "成交量");
 
         d1.setCircleRadius(0);
+        d1.setCircleHoleRadius(0);
         d2.setCircleRadius(0);
-        d1.setColor(getResources().getColor(R.color.minute_blue));
+        d1.setColor(getResources().getColor(R.color.bg_white));
         d2.setColor(getResources().getColor(R.color.minute_yellow));
         d1.setHighLightColor(Color.WHITE);
         d2.setHighlightEnabled(false);
-        d1.setDrawFilled(true);
 
 
         barDataSet.setBarSpacePercent(50); //bar空隙
@@ -318,7 +344,7 @@ public class MinutesActivity extends BaseActivity {
         barDataSet.setDrawValues(false);
         barDataSet.setHighlightEnabled(true);
         barDataSet.setColor(Color.RED);
-        List<Integer> list=new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
         list.add(Color.RED);
         list.add(Color.GREEN);
         barDataSet.setColors(list);
@@ -344,34 +370,34 @@ public class MinutesActivity extends BaseActivity {
     private void getMinutesData() {
         String code = "sz002081";
         subscriptionMinute = clientApi.getMinutes(code)
-                .compose(SchedulersCompat.<ResponseBody>applyIoSchedulers())
-                .subscribe(new Subscriber<ResponseBody>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+                  .compose(SchedulersCompat.<ResponseBody>applyIoSchedulers())
+                  .subscribe(new Subscriber<ResponseBody>() {
+                      @Override
+                      public void onCompleted() {
+                      }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        showToast("更新失败" + e.toString());
-                    }
+                      @Override
+                      public void onError(Throwable e) {
+                          showToast("更新失败" + e.toString());
+                      }
 
-                    @Override
-                    public void onNext(ResponseBody minutes) {
+                      @Override
+                      public void onNext(ResponseBody minutes) {
 
-                        mData = new DataParse();
-                        JSONObject object = null;
-                        try {
-                            object = new JSONObject(minutes.string());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        mData.parseMinutes(object);
-                        setData(mData);
+                          mData = new DataParse();
+                          JSONObject object = null;
+                          try {
+                              object = new JSONObject(minutes.string());
+                          } catch (JSONException e) {
+                              e.printStackTrace();
+                          } catch (IOException e) {
+                              e.printStackTrace();
+                          }
+                          mData.parseMinutes(object);
+                          setData(mData);
 
-                    }
-                });
+                      }
+                  });
 
         mCompositeSubscription.add(subscriptionMinute);
     }
