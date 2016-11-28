@@ -55,6 +55,7 @@ public class BaseActivity extends Activity {
             mToast.setText(content);
         }
         mToast.show();
+
     }
 
 

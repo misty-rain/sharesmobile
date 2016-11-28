@@ -198,6 +198,7 @@ public class KLineActivity extends BaseActivity {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                 Log.e("%%%%", h.getXIndex() + "");
+
                 combinedchart.highlightValues(new Highlight[]{h});
                 if (showInfoPopupWindow != null)
                     showInfoPopupWindow.dismiss();
@@ -218,7 +219,7 @@ public class KLineActivity extends BaseActivity {
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
 
                 barChart.highlightValues(new Highlight[]{h});
-
+                   //
                 if (showInfoPopupWindow != null)
                     showInfoPopupWindow.dismiss();
                 else
@@ -239,6 +240,7 @@ public class KLineActivity extends BaseActivity {
                 Log.d("qqq", "最高" + candleEntry.getHigh() + " 最低" + candleEntry.getLow() +
                           " 开盘" + candleEntry.getOpen() + " 收盘" + candleEntry.getClose() +
                           " 涨跌幅" + changePercentage);*/
+
             }
 
             @Override
@@ -248,6 +250,7 @@ public class KLineActivity extends BaseActivity {
         });
 
     }
+
 
     private float getSum(Integer a, Integer b) {
 
