@@ -6,19 +6,20 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DataParse {
     private ArrayList<MinutesBean> datas = new ArrayList<>();
     private ArrayList<KLineBean> kDatas = new ArrayList<>();
-    private float baseValue;
-    private float permaxmin;
-    private float volmax;
+    private float baseValue = 1000;
+    private float permaxmin = 100;
+    private float volmax = 2000;
     private SparseArray<String> dayLabels;
     private String code = "sz002081";
     private int decreasingColor;
     private int increasingColor;
     private String stockExchange;
-    private SparseArray<String> xValuesLabel=new SparseArray<>();
+    private SparseArray<String> xValuesLabel = new SparseArray<>();
     private int firstDay = 10;
 
     public void parseMinutes(JSONObject object) {
@@ -59,6 +60,14 @@ public class DataParse {
             permaxmin = baseValue * 0.02f;
         }
     }
+
+    public void parseMinutes(List<MinutesDataBean> minutesDataBeanList) {
+        if (minutesDataBeanList.size() == 0) {
+            return;
+        }
+
+    }
+
 
     public void parseKLine(JSONObject obj) {
         ArrayList<KLineBean> kLineBeans = new ArrayList<>();
@@ -112,6 +121,7 @@ public class DataParse {
     public ArrayList<KLineBean> getKLineDatas() {
         return kDatas;
     }
+
     public SparseArray<String> getXValuesLabel() {
         return xValuesLabel;
     }

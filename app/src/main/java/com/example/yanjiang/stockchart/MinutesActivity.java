@@ -1,6 +1,7 @@
 package com.example.yanjiang.stockchart;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -10,11 +11,10 @@ import android.widget.TextView;
 
 import com.example.yanjiang.stockchart.api.ConstantTest;
 import com.example.yanjiang.stockchart.bean.DataParse;
-import com.example.yanjiang.stockchart.bean.MinutesBean;
+import com.example.yanjiang.stockchart.bean.MinutesDataBean;
 import com.example.yanjiang.stockchart.mychart.MyBarChart;
 import com.example.yanjiang.stockchart.mychart.MyLeftMarkerView;
 import com.example.yanjiang.stockchart.mychart.MyLineChart;
-import com.example.yanjiang.stockchart.mychart.MyRightMarkerView;
 import com.example.yanjiang.stockchart.mychart.MyXAxis;
 import com.example.yanjiang.stockchart.mychart.MyYAxis;
 import com.example.yanjiang.stockchart.popupwindows.ShowInfoPopupWindow;
@@ -36,18 +36,20 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
 import rx.Subscriber;
 import rx.Subscription;
 
@@ -59,7 +61,7 @@ public class MinutesActivity extends BaseActivity {
     private Subscription subscriptionMinute;
     private LineDataSet d1, d2;
     MyXAxis xAxisLine;
-    MyYAxis axisRightLine;
+   // MyYAxis axisRightLine;
     MyYAxis axisLeftLine;
     BarDataSet barDataSet;
 
@@ -71,6 +73,11 @@ public class MinutesActivity extends BaseActivity {
     Integer sum = 0;
     List<Integer> listA, listB;
     public static ShowInfoPopupWindow showInfoPopupWindow = null;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +89,9 @@ public class MinutesActivity extends BaseActivity {
         stringSparseArray = setXLabels();
 
         /*网络数据*/
-        //getMinutesData();
+        getMinutesData();
         /*离线测试数据*/
-        getOffLineData();
+        //getOffLineData();
         lineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
@@ -153,6 +160,9 @@ public class MinutesActivity extends BaseActivity {
             Log.e("OUT", listB.get(i) + "");
         }*/
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private Integer fund(Integer a, Integer b) {
@@ -199,7 +209,7 @@ public class MinutesActivity extends BaseActivity {
 
 
         //右边y
-        axisRightLine = lineChart.getAxisRight();
+       /* axisRightLine = lineChart.getAxisRight();
         axisRightLine.setLabelCount(2, true);
         axisRightLine.setDrawLabels(true);
         axisRightLine.setValueFormatter(new YAxisValueFormatter() {
@@ -212,15 +222,15 @@ public class MinutesActivity extends BaseActivity {
 
         axisRightLine.setStartAtZero(false);
         axisRightLine.setDrawGridLines(false);
-        axisRightLine.setDrawAxisLine(false);
+        axisRightLine.setDrawAxisLine(false);*/
         //背景线
         xAxisLine.setGridColor(getResources().getColor(R.color.minute_grayLine));
         xAxisLine.setAxisLineColor(getResources().getColor(R.color.minute_grayLine));
         xAxisLine.setTextColor(getResources().getColor(R.color.minute_zhoutv));
         axisLeftLine.setGridColor(getResources().getColor(R.color.minute_grayLine));
         axisLeftLine.setTextColor(getResources().getColor(R.color.minute_zhoutv));
-        axisRightLine.setAxisLineColor(getResources().getColor(R.color.minute_grayLine));
-        axisRightLine.setTextColor(getResources().getColor(R.color.minute_zhoutv));
+       // axisRightLine.setAxisLineColor(getResources().getColor(R.color.minute_grayLine));
+        //axisRightLine.setTextColor(getResources().getColor(R.color.minute_zhoutv));
 
         //bar x y轴
         xAxisBar = barChart.getXAxis();
@@ -252,19 +262,22 @@ public class MinutesActivity extends BaseActivity {
     }
 
 
-    private void setData(DataParse mData) {
-        setMarkerView(mData);
+    private void setData(List<MinutesDataBean> minutesDataBeanList) {
+        setMarkerView(minutesDataBeanList);
         setShowLabels(stringSparseArray);
         Log.e("###", mData.getDatas().size() + "ee");
-        if (mData.getDatas().size() == 0) {
+        if (minutesDataBeanList.size() == 0) {
             lineChart.setNoDataText("暂无数据");
             return;
         }
+
         //设置y左右两轴最大最小值
         axisLeftLine.setAxisMinValue(mData.getMin());
         axisLeftLine.setAxisMaxValue(mData.getMax());
-        axisRightLine.setAxisMinValue(mData.getPercentMin());
-        axisRightLine.setAxisMaxValue(mData.getPercentMax());
+       // axisRightLine.setAxisMinValue(mData.getPercentMin());
+       // axisRightLine.setAxisMaxValue(mData.getPercentMax());
+
+
 
 
         axisLeftBar.setAxisMaxValue(mData.getVolmax());
@@ -292,8 +305,8 @@ public class MinutesActivity extends BaseActivity {
         ll.setLineColor(getResources().getColor(R.color.minute_jizhun));
         ll.enableDashedLine(10f, 10f, 0f);
         ll.setLineWidth(1);
-        axisRightLine.addLimitLine(ll);
-        axisRightLine.setBaseValue(0);
+        //axisRightLine.addLimitLine(ll);
+       // axisRightLine.setBaseValue(0);
 
         ArrayList<Entry> lineCJEntries = new ArrayList<>();
         ArrayList<Entry> lineJJEntries = new ArrayList<>();
@@ -301,12 +314,12 @@ public class MinutesActivity extends BaseActivity {
         ArrayList<BarEntry> barEntries = new ArrayList<>();
         ArrayList<String> xVals = new ArrayList<>();
         Log.e("##", Integer.toString(xVals.size()));
-        for (int i = 0, j = 0; i < mData.getDatas().size(); i++, j++) {
+        for (int i = 0, j = 0; i < minutesDataBeanList.size(); i++, j++) {
            /* //避免数据重复，skip也能正常显示
             if (mData.getDatas().get(i).time.equals("13:30")) {
                 continue;
             }*/
-            MinutesBean t = mData.getDatas().get(j);
+            MinutesDataBean t = minutesDataBeanList.get(j);
 
             if (t == null) {
                 lineCJEntries.add(new Entry(Float.NaN, i));
@@ -318,9 +331,9 @@ public class MinutesActivity extends BaseActivity {
                       stringSparseArray.get(i).contains("/")) {
                 i++;
             }
-            lineCJEntries.add(new Entry(mData.getDatas().get(i).cjprice, i));
-            lineJJEntries.add(new Entry(mData.getDatas().get(i).avprice, i));
-            barEntries.add(new BarEntry(mData.getDatas().get(i).cjnum, i));
+            lineCJEntries.add(new Entry(minutesDataBeanList.get(i).getUpp(), i));
+            lineJJEntries.add(new Entry(minutesDataBeanList.get(i).getDownp(), i));
+           // barEntries.add(new BarEntry(mData.getDatas().get(i).cjnum, i));
             // dateList.add(mData.getDatas().get(i).time);
         }
         d1 = new LineDataSet(lineCJEntries, "成交价");
@@ -368,12 +381,29 @@ public class MinutesActivity extends BaseActivity {
     }
 
     private void getMinutesData() {
-        String code = "sz002081";
-        subscriptionMinute = clientApi.getMinutes(code)
-                  .compose(SchedulersCompat.<ResponseBody>applyIoSchedulers())
-                  .subscribe(new Subscriber<ResponseBody>() {
+        String type = "readolddata";
+        String time = "2016-11-29";
+       subscriptionMinute = clientApi.getMinutes(type, time)
+                 // Be notified on the main thread
+                /* .observeOn(AndroidSchedulers.mainThread())
+                 .subscribe(new Subscriber<String>() {
+                     @Override public void onCompleted() {
+                         Log.d(TAG, "onCompleted()");
+                     }
+
+                     @Override public void onError(Throwable e) {
+                         Log.e(TAG, "onError()", e);
+                     }
+
+                     @Override public void onNext(String string) {
+                         Log.d(TAG, "onNext(" + string + ")");
+                     }
+                 });*/
+                 .compose(SchedulersCompat.<List<MinutesDataBean>>applyIoSchedulers())
+                      .subscribe(new Subscriber<List<MinutesDataBean>>() {
                       @Override
                       public void onCompleted() {
+                          Log.d(TAG, "request completed");
                       }
 
                       @Override
@@ -382,19 +412,16 @@ public class MinutesActivity extends BaseActivity {
                       }
 
                       @Override
-                      public void onNext(ResponseBody minutes) {
+                      public void onNext(List<MinutesDataBean> minutes) {
+
 
                           mData = new DataParse();
                           JSONObject object = null;
-                          try {
-                              object = new JSONObject(minutes.string());
-                          } catch (JSONException e) {
-                              e.printStackTrace();
-                          } catch (IOException e) {
-                              e.printStackTrace();
-                          }
-                          mData.parseMinutes(object);
-                          setData(mData);
+
+
+
+                         // mData.parseMinutes(object);
+                          setData(minutes);
 
                       }
                   });
@@ -412,7 +439,7 @@ public class MinutesActivity extends BaseActivity {
             e.printStackTrace();
         }
         mData.parseMinutes(object);
-        setData(mData);
+        //setData(mData);
     }
 
     private SparseArray<String> setXLabels() {
@@ -469,9 +496,44 @@ public class MinutesActivity extends BaseActivity {
         return new String[242];
     }
 
-    private void setMarkerView(DataParse mData) {
+    private void setMarkerView(List<MinutesDataBean> minutesDataBeanList) {
         MyLeftMarkerView leftMarkerView = new MyLeftMarkerView(MinutesActivity.this, R.layout.mymarkerview);
-        MyRightMarkerView rightMarkerView = new MyRightMarkerView(MinutesActivity.this, R.layout.mymarkerview);
-        lineChart.setMarker(leftMarkerView, rightMarkerView, mData);
+        lineChart.setMarker(leftMarkerView, minutesDataBeanList);
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                  .setName("Minutes Page") // TODO: Define a title for the content shown.
+                  // TODO: Make sure this auto-generated URL is correct.
+                  .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                  .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                  .setObject(object)
+                  .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                  .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }
