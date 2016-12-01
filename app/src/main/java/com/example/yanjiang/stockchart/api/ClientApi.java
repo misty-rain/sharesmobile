@@ -1,7 +1,10 @@
 package com.example.yanjiang.stockchart.api;
 
-import okhttp3.ResponseBody;
-import retrofit2.http.GET;
+import com.example.yanjiang.stockchart.bean.MinutesDataBean;
+
+import java.util.List;
+
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -31,7 +34,7 @@ public interface ClientApi {
 
 
     /*分时图url*/
-    @GET(Constant.DETAILURL)
-    Observable<ResponseBody> getMinutes(@Query("code") String code);
+    @POST(Constant.DETAILURL)
+    Observable<List<MinutesDataBean>> getMinutes(@Query("type") String type, @Query("time") String time);
 
 }

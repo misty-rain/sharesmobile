@@ -7,7 +7,7 @@ import android.os.Environment;
  */
 public class Constant {
     public static final String MINUTESURL="http://test/";
-    public static final String DETAILURL="test/";
+    public static final String DETAILURL="http://iclinshi.9588game.com/api/api.aspx";
 
     public static final String APATCH_PATH = "/out.apatch";
     public static final String EXTERNALPATH  = Environment.getExternalStorageDirectory().getAbsolutePath();

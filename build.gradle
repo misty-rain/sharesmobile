@@ -15,7 +15,7 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url "https://jitpack.io" }
+        maven { url 'http://192.168.21.8:8081/content/repositories/releases/' }
         jcenter()
     }
 }
